@@ -14,8 +14,12 @@ public class RoomListing : MonoBehaviour
 
     private void Awake() 
 	{
-		
-	}
+        GameObject lobbyCanvasOBJ = MainCenvasManager.Instance.LobbyCanvas.gameObject;
+        if (lobbyCanvasOBJ == null) return;
+        LobbyCanvas lobbyCanvas = lobbyCanvasOBJ.GetComponent<LobbyCanvas>();
+        Button button = GetComponent<Button>();
+        button.onClick.AddListener(() => lobbyCanvas.OnClick_JoinRoom(RoomNameText.text));
+    }
 	
 	public  void SetRoomName(string text) 
 	{

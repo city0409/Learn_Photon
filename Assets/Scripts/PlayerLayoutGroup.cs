@@ -22,14 +22,18 @@ public class PlayerLayoutGroup : MonoBehaviour
         {
             PlayerJoinedRoom(photonPlayers[i]);
         }
+    }
 
-
+    //Invoke by Photon
+    private void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+    {
+        PlayerJoinedRoom(newPlayer);
     }
 
     private void PlayerJoinedRoom(PhotonPlayer photonPlayer)
     {
         if (photonPlayer == null) return;
-        PlayerLeftRoom();
+        PlayerLeftRoom(photonPlayer);
 
         GameObject playerListingOBJ = Instantiate(playerListingPrefab);
         playerListingOBJ.transform.SetParent(this .transform, false);
@@ -38,9 +42,14 @@ public class PlayerLayoutGroup : MonoBehaviour
         PlayerListings.Add(playerListing);
     }
 
-    private void PlayerLeftRoom()
+    private void PlayerLeftRoom(PhotonPlayer photonPlayer)
     {
-        
+        int index = playerListings.FindIndex(x => x.PhotonPlayer == photonPlayer);
+        if (index != -1)
+        {
+            Destroy(PlayerListings[index].gameObject);
+            PlayerListings.RemoveAt(index);
+        }
     }
 
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 public class RoomCanvas : MonoBehaviour 
 {
 
-	private void Awake() 
+	public void OnClick_StartDelay() 
 	{
-		
-	}
-	
-	private void Update () 
+        PhotonNetwork.LoadLevel(1);
+    }
+
+    public void OnClick_StartSync () 
 	{
-		
+        PhotonNetwork.LoadLevel(1);
 	}
 }
