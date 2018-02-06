@@ -9,6 +9,8 @@ public class PlayerNetwork : MonoBehaviour
     public string PlayerName { get; private set; }
     private PhotonView photonView;
 
+    private int playerCount;
+
     private void Awake() 
 	{
         Instance = this;
@@ -36,11 +38,23 @@ public class PlayerNetwork : MonoBehaviour
 
     private void MasterLoadedGame()
     {
+        photonView.RPC("RPC_LoadGameScene", PhotonTargets.MasterClient);
         photonView.RPC("RPC_LoadGameOthers", PhotonTargets.Others);
     }
 
     private void NonMasterLoadedGame()
     {
+        photonView.RPC("RPC_LoadGameScene", PhotonTargets.MasterClient);
+    }
+
+    [PunRPC]
+    private void RPC_LoadGameScene()
+    {
+        playerCount++;
+        if (playerCount==PhotonNetwork .playerList .Length )
+        {
+            photonView.RPC("RPC_CreatePlayer", PhotonTargets.All);
+        }
     }
 
     [PunRPC]
@@ -48,4 +62,11 @@ public class PlayerNetwork : MonoBehaviour
     {
         PhotonNetwork.LoadLevel(1);
     }
+
+    [PunRPC]
+    private void RPC_CreatePlayer()
+    {
+        PhotonNetwork.Instantiate("Prefabs/Player",Vector3.zero,Quaternion.identity,0);
+    }
+
 }
